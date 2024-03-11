@@ -3,11 +3,20 @@ const { Todo } = require('../../models/models');
 
 class TodoController {
     async getTodos(req, res) {
+        const { limitItems, offsetItems } = req.query;
+
+        const limit = parseInt(limitItems) || 10;
+        const offset = parseInt(offsetItems) || 0;
+
         try {
             const items = await Todo.findAll({
-                order: [['id', 'ASC']]
+                order: [['id', 'ASC']],
+                limit,
+                offset
             });
-            res.json(items);
+            const count = await Todo.count();
+
+            res.json({items, count});
         } catch (error) {
             console.error('Error fetching items:', error);
             res.status(500).json({ error: 'Failed to fetch items' });
