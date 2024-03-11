@@ -58,7 +58,7 @@ class TodoController {
 
     async completeTodo(req, res) {
         const { todoId, isComplete } = req.body;
-        console.log('isComp', todoId, isComplete)
+
         try {
             const item = await Todo.findByPk(todoId);
 
@@ -79,7 +79,25 @@ class TodoController {
     }
 
     async editTodos(req, res) {
+        const { todoId, description } = req.body;
 
+        try {
+            const item = await Todo.findByPk(todoId);
+
+            if (!item) {
+                return res.status(404).json({ error: 'Item not found' });
+            }
+
+            await item.update({ description });
+
+            const remainingItems = await Todo.findAll({
+                order: [['id', 'ASC']]
+            });
+            res.json(remainingItems);
+        } catch (error) {
+            console.error('Error updating item:', error);
+            res.status(500).json({ error: 'Failed to update item' });
+        }
     }
 }
 
