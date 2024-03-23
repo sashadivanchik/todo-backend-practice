@@ -95,13 +95,9 @@ class TodoController {
 
             await item.update({ description });
 
-            const items = await Todo.findAll({
-                order: [['id', 'DESC']]
-            });
-
             const count = await Todo.count();
 
-            res.status(200).json({items, count});
+            res.status(200).json({ count, item});
         } catch (error) {
             console.error('Error updating item:', error);
             res.status(500).json({ error: 'Failed to update item' });
