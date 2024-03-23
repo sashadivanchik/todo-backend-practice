@@ -27,18 +27,14 @@ class TodoController {
         const { description, isComplete } = req.body;
 
         try {
-            await Todo.create({
+            const item = await Todo.create({
                 description,
                 isComplete,
             });
 
-            const items = await Todo.findAll({
-                order: [['id', 'DESC']]
-            });
-
             const count = await Todo.count();
 
-            res.status(201).json({items, count});
+            res.status(201).json({ count, item });
         } catch (error) {
             console.error('Error adding item:', error);
             res.status(500).json({ error: 'Failed to add item' });
