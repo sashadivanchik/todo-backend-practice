@@ -3,10 +3,10 @@ const { Todo } = require('../../models/models');
 
 class TodoController {
     async getTodos(req, res) {
-        const { limitItems, offsetItems } = req.query;
+        const { page, limitItems} = req.query;
 
         const limit = parseInt(limitItems) || 10;
-        const offset = parseInt(offsetItems) || 0;
+        const offset = (page - 1) * limit
 
         try {
             const items = await Todo.findAll({
